@@ -74,7 +74,7 @@ def create_app(test_config=None):
 
 # controller function for handling getting questions from category.
 
-    @app.route('/<int:category_id>/questions', methods=['GET'])
+    @app.route('/v1/categories/<int:category_id>/questions', methods=['GET'])
     def question(category_id):
 
         categories = Category.query.filter(Category.id==category_id)
@@ -111,15 +111,52 @@ def create_app(test_config=None):
 
     #========================DONE=====================================================
 
-    """
+    @app.route('/v1/questions/<int:question_id>', methods=['GET'])
+    def delete_question(question_id):
+        try:
+            question = Question.query.filter(Question.id== question_id).one_or_none()
+
+            if question is None:
+                abort(404)
+
+            question.delete()
+            questions = Question.query.order_by(Question.id).all()
+            current_books = paginate_books(request, questions)
+
+            print(question)
+            print(len(Question.query.all()))
+            print('deleted!')
+            
+            return jsonify({
+                'success': True,
+                'deleted' : question_id,   
+                'questions' : current_books,
+                'total_questions' : len(Question.query.all())
+                })
+        except:
+            print('aborted')
+            abort(422)
+
+"""
     @TODO:
     Create an endpoint to DELETE question using a question ID.
 
     TEST: When you click the trash icon next to a question, the question will be removed.
     This removal will persist in the database and when you refresh the page.
     """
+            
 
-    """
+#============================DONE==========================================
+
+
+            
+
+
+       
+
+  
+
+"""
     @TODO:
     Create an endpoint to POST a new question,
     which will require the question and answer text,
